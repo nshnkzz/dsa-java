@@ -42,6 +42,51 @@ public class DP {
     }
 
     /**
+     * https://leetcode.com/problems/subarray-sum-equals-k/description/
+     * Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+     * A subarray is a contiguous non-empty sequence of elements within an array.
+     * 
+     * this solution also considers non-contiguous elements. for contiguous case, use SlidingWindow or hashmap.
+     * @param arr
+     * @param sum
+     * @param isToUseDP
+     * @return number os subsets of array with given sum
+     */
+    public static int countSubarraySum(int[] arr, int sum, boolean isToUseSlidingWindow) {
+        if(isToUseSlidingWindow)
+        {
+            return SlidingWindow.countSubarraySum(arr, sum, !isToUseSlidingWindow);
+        }
+        int N = arr.length;
+        // initialize dp array
+        int[][] dp = new int[N+1][sum+1];
+
+        // initialize elements for sum = 0
+        for (int i = 0; i <= N; i++) {
+            dp[i][0] = 1; // Subset sum of 0 is always possible with an empty set
+        }
+
+        // initialize elements for N = 0, sum > 0
+        for (int j = 1; j <= sum; j++) {
+            dp[0][j] = 0; // Subset sum > 0 with an empty set is not possible
+        }
+
+        // iterate through given array and fill the dp array.
+        for(int i=1; i<=N; i++)
+        {
+            for(int j=1; j<=sum; j++)
+            {
+                dp[i][j] = (arr[i-1]<=j )?
+                dp[i-1][j] + dp[i-1][j-arr[i-1]] :
+                dp[i-1][j];
+            }
+        }
+
+        //return
+        return dp[N][sum];
+    }
+
+    /**
      * https://leetcode.com/problems/partition-equal-subset-sum/description/
      * Given an integer array nums, return true if you can partition the
      * array into two subsets such that the sum of the elements in both 
