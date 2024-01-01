@@ -1,4 +1,17 @@
+/**
+ * Solutions to Dynamic Problem questions.
+ * Visit my Github repo: https://github.com/nshnkzz/dsa-java
+ */
 public class DPProblems {
+    /**
+     * https://practice.geeksforgeeks.org/problems/subset-sum-problem-1611555638/1
+     * Given an array of non-negative integers, and a value sum, determine if there 
+     * is a subset of the given set with sum equal to given sum. 
+     * @param N : Number of elements
+     * @param arr : Array of elements
+     * @param sum : the target sum
+     * @return boolean which indicates if subset with given sum is present
+     */
     public static Boolean isSubsetSum(int N, int arr[], int sum){
         // initialize dp array
         int[][] dp = new int[N+1][sum+1];
