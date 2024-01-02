@@ -109,4 +109,48 @@ public class DP {
         // we call is subset sum 
         return sum%2 == 0? isSubsetSum(nums.length, nums, sum/2) : false;
     }
+
+    public static int minimumDifference(int[] arr) {
+        int N = arr.length;
+        int sum = 0;
+        for(int i: arr)
+        sum += i;
+         // initialize dp array
+        int[][] dp = new int[N+1][sum+1];
+
+        // initialize elements for sum = 0
+        for (int i = 0; i <= N; i++) {
+            dp[i][0] = 1; // Subset sum of 0 is always possible with an empty set
+        }
+
+        // initialize elements for N = 0, sum > 0
+        for (int j = 1; j <= sum; j++) {
+            dp[0][j] = 0; // Subset sum > 0 with an empty set is not possible
+        }
+
+        // iterate through given array and fill the dp array.
+        for(int i=1; i<=N; i++)
+        {
+            for(int j=1; j<=sum; j++)
+            {
+                dp[i][j] = (arr[i-1]<=j )?
+                dp[i-1][j] | dp[i-1][j-arr[i-1]] :
+                dp[i-1][j];
+            }
+        }
+
+        //return
+        // Initialize difference of two sums.
+        int diff = Integer.MAX_VALUE;
+    
+        // Find the largest j such that dp[n][j]
+        // is true where j loops from sum/2 t0 0
+        for (int j = sum / 2; j >= 0; j--) {
+            if (dp[N][j] == 1) {
+                diff = sum - 2 * j;
+                break;
+            }
+        }
+        return diff;
+    }
 }
