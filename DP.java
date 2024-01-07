@@ -110,6 +110,11 @@ public class DP {
         return sum%2 == 0? isSubsetSum(nums.length, nums, sum/2) : false;
     }
 
+    /**
+     * https://www.geeksforgeeks.org/problems/minimum-sum-partition3317/1?utm_source=geeksforgeeks&utm_medium=article_practice_tab&utm_campaign=article_practice_tab
+     * @param arr
+     * @return the miniMUM difference between two subsets of an array of non negative integers.
+     */
     public static int minimumDifference(int[] arr) {
         int N = arr.length;
         int sum = 0;
@@ -152,5 +157,55 @@ public class DP {
             }
         }
         return diff;
+    }
+
+    /**
+     * finds the number of subsets from the given array such that the difference between two equals the difference given.
+     * @param n : size of array
+     * @param d : given difference
+     * @param arr ; given array
+     * @return count of subsets.
+     */
+    public static int countPartitions(int n, int d, int arr[]){
+        
+        // Code here
+        // just find target sum. viola!!
+        int total = 0;
+        for(int i : arr)
+        total += i;
+        int target = (d+total)/2;
+        return countSubarraySum(arr, target, false);
+    }
+
+    /**
+     * https://leetcode.com/problems/target-sum/
+     * @param nums
+     * @param S
+     * @return
+     */
+    public int findTargetSumWays(int[] nums, int S) {
+        // just find target sum. viola!!
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+
+        S = Math.abs(S);
+        
+        if (S > sum || (S + sum) % 2 != 0) {
+            return 0;
+        }
+        
+        int target = (S + sum) / 2;
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        
+        for (int num : nums) {
+            for (int i = target; i >= num; i--) {
+                dp[i] += dp[i - num];
+            }
+        }
+        
+        return dp[target];
     }
 }
