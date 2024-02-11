@@ -208,4 +208,66 @@ public class DP {
         
         return dp[target];
     }
+
+    /**
+     * https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+     * @problem statement: Given a rod of length N inches and an array of prices, price[]. price[i] denotes
+     *  the value of a piece of length i. Determine the maximum value obtainable by cutting up the rod and selling the pieces.
+     * 
+     * @param price
+     * @param n
+     * @return maximum value obtainable by cutting up the rod and selling the pieces
+     * 
+     * @Explaination: Dynamic Programming Array (dp[]): The dp array is used to store the optimal values for different lengths of rods. dp[i] represents the maximum profit that can be obtained by cutting a rod of length i.
+     * 
+     * Outer Loop (i): This loop iterates over each possible length of rod from 1 to n. For each length i, we compute the maximum profit that can be obtained.
+     * 
+     * Inner Loop (j): For each length i, this loop iterates over each possible way to cut the rod of length i. It starts from 1 and goes up to i. For each cut length j, we calculate the profit that can be obtained by cutting the rod at length j, adding the price of the cut piece (price[j - 1]) to the optimal profit of the remaining rod (dp[i - j]).
+     * 
+     * Maximum Profit (maxp): For each rod length i, we keep track of the maximum profit (maxp) that can be obtained by considering all possible ways to cut the rod.
+     * 
+     * Storing the  Optimal Value: After computing the maximum profit for the current length of rod i, we store this value in the dp array at index i.
+     *
+     * Returning the Result: Finally, we return dp[n], which represents the maximum profit that can be obtained by cutting a rod of length n.
+     */
+    public int cutRodBottomUp(int price[], int n) {
+        //code here
+        int dp[] = new int[n+1];
+        for(int i = 1; i<=n; i++)
+        {
+            int maxp = 0;
+            for(int j =1; j<=i; j++)
+            {
+                maxp= Math.max(maxp, price[j-1] + dp[i-j]);
+            }
+            dp[i] = maxp;
+        }
+        return dp[n];
+    }
+
+    /**
+     * https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+     * @problem statement: Given a rod of length N inches and an array of prices, price[]. price[i] denotes
+     *  the value of a piece of length i. Determine the maximum value obtainable by cutting up the rod and selling the pieces.
+     * 
+     * @param price
+     * @param n
+     * @return
+     */
+    public int cutRodTopDown(int price[], int n) {
+        //code here
+        int[][] dp = new int[price.length + 1][n+1];
+        for(int i=1; i<=price.length; i++)
+        {
+            for(int j =1; j<=n; j++)
+            {
+                if(i <= j)
+                {
+                    dp[i][j] = Math.max(dp[i-1][j], price[i-1] + dp[i][j-i]);
+                }
+                else dp[i][j] = dp[i-1][j];
+            }
+        }
+        return dp[price.length][n];
+    }
 }
