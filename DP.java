@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Solutions to Dynamic Problem questions.
  * Visit my Github repo: https://github.com/nshnkzz/dsa-java
@@ -323,5 +325,66 @@ public class DP {
             }
         }   
         return dp[sum];
+    }
+    /**
+     * https://leetcode.com/problems/coin-change/
+     * @param coins
+     * @param amount
+     * @return
+     */
+    public int coinChangeMinimiseTopDown(int[] coins, int amount) {
+        int coin = coins.length;
+        int[][] dp = new int [coin+1][amount+1];
+        int maxval = Integer.MAX_VALUE-1;
+        for(int i = 0; i<=amount; i++)
+        {
+            dp[0][i] = maxval;
+        }
+        for(int j = 1; j<= amount; j++)
+        {
+            if(j%coins[0] == 0)
+            {
+                dp[1][j] = j/coins[0];
+            }
+            else dp[1][j] = maxval;
+        }
+        if(coin == 1) 
+        return (dp[coin][amount] == maxval)? -1: dp[coin][amount];
+        for(int i=2; i<=coin; i++)
+        {
+            for(int j =1; j<=amount; j++)
+            {
+                if(coins[i-1] <= j)
+                {
+                    dp[i][j] = Math.min(dp[i][j-coins[i-1]]+1, dp[i-1][j]);
+                }
+                else dp[i][j] = dp[i-1][j];
+            }
+        }
+        return (dp[coin][amount] == maxval)? -1: dp[coin][amount];
+    }
+
+    /**
+     * https://leetcode.com/problems/coin-change/
+     * @param coins
+     * @param amount
+     * @return
+     */
+    public int coinChangeMinimiseBottomUp(int[] coins, int amount) {
+        if (amount == 0) {
+            return 0; 
+        }
+
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE-1); 
+
+        dp[0] = 0;
+
+        for (int coin : coins) {
+            for (int i = coin; i <= amount; i++) {
+                dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+            }
+        }
+        return dp[amount] == Integer.MAX_VALUE-1 ? -1 : dp[amount];
     }
 }
