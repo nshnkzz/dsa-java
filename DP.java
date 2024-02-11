@@ -270,4 +270,58 @@ public class DP {
         }
         return dp[price.length][n];
     }
+
+    /**
+     * https://www.geeksforgeeks.org/problems/coin-change2448/1
+     * @param coins
+     * @param N
+     * @param sum
+     * @return
+     */
+    public long coinChangeWaysTopDown(int coins[], int N, int sum) {
+        // code here.
+        long[][] dp = new long[N + 1][sum + 1];
+        for (int i = 0; i <= N; i++) {
+            dp[i][0] = 1;
+        }
+
+        // Fill the dp table
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= sum; j++) {
+                // Don't include coin i in the solution
+                dp[i][j] = dp[i - 1][j];
+
+                // Include coin i if it doesn't exceed the sum
+                if (coins[i - 1] <= j) {
+                    dp[i][j] += dp[i][j - coins[i - 1]];
+                }
+            }
+        }
+
+        return dp[N][sum];
+    }
+
+    /**
+     * https://www.geeksforgeeks.org/problems/coin-change2448/1
+     * @param coins
+     * @param N
+     * @param sum
+     * @return
+     */
+    public long coinChangeWaysBottomUp(int coins[], int N, int sum) {
+        // code here.
+        long[] dp = new long[sum+1];
+        dp[0] = 1;
+        
+        for(int i=0;i<N;i++){
+            for(int j=1;j<sum+1;j++){
+                int coinValue = coins[i];
+                
+                if(j-coinValue>=0){
+                    dp[j] = dp[j] + dp[j-coinValue];
+                }
+            }
+        }   
+        return dp[sum];
+    }
 }
