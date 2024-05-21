@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Solutions to Dynamic Problem questions.
@@ -386,5 +387,108 @@ public class DP {
             }
         }
         return dp[amount] == Integer.MAX_VALUE-1 ? -1 : dp[amount];
+    }
+
+    public static int longestCommonSubsequence(String A, String B) {
+        int[][] dp = new int[A.length() + 1][B.length() + 1];
+        // No need to fill the array with -1 as the default value is already 0
+        
+        return longestCommonSubsequence(A, B, A.length(), B.length(), dp);
+    }
+    
+    private static int longestCommonSubsequence(String A, String B, int alen, int blen, int[][] dp) {
+        if (alen == 0 || blen == 0) 
+        {
+            return 0;
+        }
+        if (dp[alen][blen] != 0) 
+        {
+            return dp[alen][blen];
+        }
+        if (A.charAt(alen - 1) == B.charAt(blen - 1)) 
+        {
+            dp[alen][blen] = 1 + longestCommonSubsequence(A, B, alen - 1, blen - 1, dp);
+            return dp[alen][blen];
+        } 
+        else 
+        {
+            dp[alen][blen] = Math.max(longestCommonSubsequence(A, B, alen - 1, blen, dp),
+                                      longestCommonSubsequence(A, B, alen, blen - 1, dp));
+            return dp[alen][blen];
+        }
+    }
+
+    public static int utility(String s, int i, int j, boolean isTrue, HashMap<String, Integer> dp)
+    {
+        if(i>j)
+        {
+            return 0;
+        }
+        
+        if(i == j)
+        {
+            if(isTrue)
+            {
+                return s.charAt(i) == 'T' ? 1 : 0;
+            }
+            
+                return s.charAt(i) == 'F' ? 1 : 0;
+        }
+        if(dp.containsKey(dpStringBuilder(i, j, isTrue)))
+        {
+            return dp.get(dpStringBuilder(i, j, isTrue));
+        }
+        
+        int ans = 0;
+        
+        for(int k = i+1; k<=j; k+=2)
+        {
+            if(k>=s.length())
+            break;
+            int lt = dp.containsKey(dpStringBuilder(i, k-1, true)) ? dp.get(dpStringBuilder(i, k-1, true)) : utility(s, i, k-1, true, dp);
+            int lf = dp.containsKey(dpStringBuilder(i, k-1, false)) ? dp.get(dpStringBuilder(i, k-1, false)) : utility(s, i, k-1, false, dp);
+            int rt = dp.containsKey(dpStringBuilder(k+1, j, true)) ? dp.get(dpStringBuilder(k+1, j, true)) : utility(s, k+1, j, true, dp);
+            int rf = dp.containsKey(dpStringBuilder(k+1, j, false)) ? dp.get(dpStringBuilder(k+1, j, false)) : utility(s, k+1, j, false, dp);
+            
+            if(s.charAt(k) == '&')
+            {
+                if(isTrue)
+                {
+                    ans = ans + lt*rt;
+                }
+                else ans = ans + lf*rt + lf*rf + lt*rf;
+                
+            }
+            if(s.charAt(k) == '|')
+            {
+                if(isTrue)
+                {
+                    ans = ans + lt*rt + lt*rf + lf*rt;
+                }
+                else ans = ans + lf*rf;
+                
+            }
+            if(s.charAt(k) == '^')
+            {
+                if(isTrue)
+                {
+                    ans = ans + lf*rt + lt*rf;
+                }
+                else ans = ans + lf*rf + lt*rt;
+                
+            }
+            dp.put(dpStringBuilder(i, j, isTrue), ans);
+        }
+        return ans;   
+    }
+    private static String dpStringBuilder(int i, int j, boolean isTuru)
+    {
+        String separator = "*_*";
+        return String.valueOf(i) + separator + String.valueOf(j) + String.valueOf(isTuru);
+    }
+    public static int countWays(int N, String S)
+    {
+        HashMap<String, Integer> dp = new HashMap<>();
+        return utility(S, 0, N - 1, true, dp);
     }
 }
