@@ -516,4 +516,72 @@ public class DP {
         }
         return dp[r];
     }
+
+    public static int findCatalan(int n) {
+        // code here
+        if(n==0)
+        {
+            return 1;
+        }
+        if(n==1)
+        {
+            return 1;
+        }
+        if(n==2)
+        {
+            return 2;
+        }
+        // if(n==3)
+        // {
+        //     return 5;
+        // }
+        // if(n==4)
+        // {
+        //     return 14;
+        // }
+        // if(n==5)
+        // {
+        //     return 42;
+        // }
+        // if(n==6)
+        // {
+        //     return 132;
+        // }
+        // if(n==7)
+        // {
+        //     return 429;
+        // }
+        // if(n==8)
+        // {
+        //     return 1430;
+        // }
+        // if(n==9)
+        // {
+        //     return 4862;
+        // }
+        // get nth odd number
+        int nthOdd = 2 * (n) +1;
+        long[] dp = new long[nthOdd];
+        dp[0] = 1;
+        for(int i = 0; i< nthOdd-1; i++)
+        {
+            // System.out.println("at i:" + i);
+            // for(long oi : dp)
+            //     System.out.println(oi);
+
+            for(int j= dp.length-1; j>0; j--)
+            {
+                // int a = dp[j];
+                // int b = dp[j-1];
+                dp[j] = (dp[j] + dp[j-1]);
+                // System.out.println("dp[j] at j: "+ j + " is " + dp[j]);
+            }
+            
+        }
+        // for(long i : dp)
+        // System.out.println(i);
+        
+        // System.out.println("dp[dp.length] & dp[dp.length-1] : " + dp[dp.length/2] + " : " + dp[dp.length/2+1] );
+        return (int) (dp[dp.length/2 ]-dp[dp.length/2+1]/*  % 1000000007*/);
+    }
 }
