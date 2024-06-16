@@ -576,12 +576,41 @@ public class DP {
                 dp[j] = (dp[j] + dp[j-1]);
                 // System.out.println("dp[j] at j: "+ j + " is " + dp[j]);
             }
-            
+        
         }
         // for(long i : dp)
         // System.out.println(i);
         
         // System.out.println("dp[dp.length] & dp[dp.length-1] : " + dp[dp.length/2] + " : " + dp[dp.length/2+1] );
         return (int) (dp[dp.length/2 ]-dp[dp.length/2+1]/*  % 1000000007*/);
+    }
+
+    /**
+     * https://www.geeksforgeeks.org/problems/matrix-chain-multiplication0303/1
+     * @param N
+     * @param arr
+     * @return
+     */
+    static int matrixMultiplication(int N, int arr[])
+    {
+        int[][] dp = new int[100][100];
+        // code here
+        for (int[] row : dp) 
+            Arrays.fill(row, -1); 
+        int a = solvemcm(arr, 1, N-1, dp);
+        return a;
+    }    
+    static int solvemcm(int arr[], int i, int j, int[][] dp)
+    {
+        if(i==j) return 0;
+        
+        if(dp[i][j] != -1) return dp[i][j];
+            
+        int min = Integer.MAX_VALUE;
+        for(int k=i; k<j; k++)
+        {
+            min = Math.min(min, solvemcm(arr, i, k, dp) + solvemcm(arr, k+1, j, dp) + arr[k]*arr[i-1]*arr[j]);
+        }
+        return dp[i][j] = min;
     }
 }
