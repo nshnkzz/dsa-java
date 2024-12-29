@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Solutions to Dynamic Problem questions.
@@ -613,4 +614,26 @@ public class DP {
         }
         return dp[i][j] = min;
     }
+    
+    public static int wordBreak(int n, String s, List<String> dict)
+    {
+        //code here
+        return wordBreak(s,dict,0)?1:0;
+    }
+    
+    public static boolean wordBreak(String s, List<String> dict, int i)
+    {
+        if(i==s.length()) return true;
+        //code here
+        for(int j=i+1; j<=s.length(); j++)
+        {
+            String substr = s.substring(i,j);
+            if(dict.contains(substr) && wordBreak(s,dict,j))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
