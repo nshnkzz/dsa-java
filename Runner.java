@@ -1,51 +1,53 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.io.*;
+class iPair {
+    int first, second;
 
+    iPair(int first, int second) {
+        this.first = first;
+        this.second = second;
+    }
+}
 public class Runner {
     public static void main(String[] args) {
-        //call the problems here
-        String a = "T^F|F";
-        String b = "lrbbmqbabowkkab";
-        List<String> lsr = Arrays.asList(
-            "lrbbmqb", "cd", "r", "owkk");
-
-        int[][] dp = new int[2][2];
-        int [][] arr =  {{9, 7, 16, 5}, {1,-6,-7, 3}, {1, 8, 7, 9}, {7, -2, 0, 10}};
-        
-        // int isSubsetSum = DP.findCatalan(7);
-        // System.out.println("LCSubsequnce is: " + sumZeroMatrix(arr));
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int t;
-        try {
-        t = Integer.parseInt(br.readLine());
-            while(t-- > 0){
-                
-                
-                int[] nm = iinput(br, 2);
-                
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        ArrayList<ArrayList<iPair>> adj = new ArrayList<>();
+        ArrayList<iPair> a= new ArrayList<>();
+        a.add(new iPair(1,9));
+        ArrayList<iPair> b= new ArrayList<>();
+        b.add(new iPair(0,9));
+        adj.add(a);
+        adj.add(b);
+        dijkstra(adj, 0);
     }
-    
-    public static int[] iinput(BufferedReader br, int n) throws IOException
-        {
-            String[] s = br.readLine().trim().split(" ");
-            int[] a = new int[n];
-            for(int i = 0; i < n; i++)
-                a[i] = Integer.parseInt(s[0]);
-            
-            return a;
-        }
 
-   
+    static ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
+        // Write your code here
+        PriorityQueue<iPair> pq = new PriorityQueue<iPair>((x, y) ->Integer.compare(x.first, y.first));
+        List<Integer> dist = new ArrayList<>();
+        int mx = Integer.MAX_VALUE;
+        for(int i=0; i<adj.size(); i++)
+        {
+            dist.add(mx);
+        }
+        dist.set(src, 0);
+        pq.add(new iPair(src,0));
+        while(!pq.isEmpty())
+        {
+            iPair pair = pq.poll();
+            int weight = pair.second;
+            int node = pair.first;
+            for(iPair p:adj.get(node))
+            {
+                int wt = p.second;
+                int adjNode = p.first;
+                if(weight + wt < dist.get(adjNode))
+                {
+                    dist.set(adjNode, weight + wt);
+                    pq.add(new iPair( adjNode, dist.get(adjNode)));
+                }
+            }
+        }
+        return new ArrayList<>(dist);
+    }
     
 }
