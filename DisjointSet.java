@@ -12,6 +12,7 @@ class DisjointSet {
         {
             rank.add(0);
             parent.add(i);
+            size.add(1);
         }
     }
 
@@ -46,19 +47,35 @@ class DisjointSet {
         }
     }
 
+    public void unionBySize(int u, int v)
+    {
+        int ultimateParentU = findParent(u);
+        int ultimateParentV = findParent(v);
+        if(ultimateParentU==ultimateParentV) return;
+        if(size.get(ultimateParentU) == size.get(ultimateParentV))
+        {
+            parent.set(ultimateParentU, ultimateParentV);
+            size.set(ultimateParentV, size.get(ultimateParentU) + size.get(ultimateParentV));
+        }
+        else {
+            parent.set(ultimateParentV, ultimateParentU);
+            size.set(ultimateParentU, size.get(ultimateParentU) + size.get(ultimateParentV));
+        }
+    }
+
     public String checkDisJoint(int node1, int node2) {
         return findParent(node1) == findParent(node2) ? "Same" : "Not Same";
     }
 
     public static void main(String[] args) {
         DisjointSet dj = new DisjointSet(7);
-        dj.unionByRank(1,2);
-        dj.unionByRank(2,3);
-        dj.unionByRank(4,5);
-        dj.unionByRank(6,7);
-        dj.unionByRank(5,6);
+        dj.unionBySize(1,2);
+        dj.unionBySize(2,3);
+        dj.unionBySize(4,5);
+        dj.unionBySize(6,7);
+        dj.unionBySize(5,6);
         System.out.println( dj.checkDisJoint(3, 7));
-        dj.unionByRank(3,7);
+        dj.unionBySize(3,7);
         System.out.println( dj.checkDisJoint(3, 7));
     }
 
