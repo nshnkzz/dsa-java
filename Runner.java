@@ -1,5 +1,4 @@
 import java.util.*;
-import java.io.*;
 class iPair {
     int first, second;
 
@@ -10,90 +9,58 @@ class iPair {
 }
 public class Runner {
     public static void main(String[] args) {
-        int arr[] = {60, 20, 50, 40, 10, 50, 60};
-        System.out.println(getMaxArea(arr));
+        System.out.println(countWays("123"));
     }
 
+    public static int countWays(String digits) {
+        // s code here
+        List<Integer> dig = new ArrayList<>();
+        for(char c: digits.toCharArray())
+        {
+            if(c == '0')
+                return 0;
 
-    public static int getMaxArea(int arr[]) {
-        int n = arr.length;
-
-        // Left span: Count of consecutive bars on left (including self)
-        ArrayList<Integer> left = new ArrayList<>(Collections.nCopies(n, 0));
-        Stack<Integer> stk = new Stack<>();
-
-        for (int i = 0; i < n; i++) {
-            while (!stk.isEmpty() && arr[stk.peek()] >= arr[i]) {
-                stk.pop();
-            }
-            if (stk.isEmpty()) {
-                left.set(i, i + 1);
-            } else {
-                left.set(i, i - stk.peek());
-            }
-            stk.push(i);
-        }
-        System.out.println(left);
-
-        // Clear the stack for re-use
-        stk.clear();
-
-        // Right span: Count of consecutive bars on right (including self)
-        ArrayList<Integer> right = new ArrayList<>(Collections.nCopies(n, 0));
-
-        for (int i = n - 1; i >= 0; i--) {
-            while (!stk.isEmpty() && arr[stk.peek()] >= arr[i]) {
-                stk.pop();
-            }
-            if (stk.isEmpty()) {
-                right.set(i, n - i);
-            } else {
-                right.set(i, stk.peek() - i);
-            }
-            stk.push(i);
-        }
-        System.out.println(right);
-
-        // Calculate maximum area
-        int mArea = 0;
-        for (int i = 0; i < n; i++) {
-            int width = left.get(i) + right.get(i) - 1; // Total width for bar i
-            mArea = Math.max(mArea, arr[i] * width);
-
-            System.out.println("calc:: i:" + i + " width: " + width + " area: " + mArea);
+            dig.add(c-'0');
         }
 
-        return mArea;
+        return ways(dig, 0, false);
     }
 
-    static ArrayList<Integer> dijkstra(ArrayList<ArrayList<iPair>> adj, int src) {
-        // Write your code here
-        PriorityQueue<iPair> pq = new PriorityQueue<iPair>((x, y) ->Integer.compare(x.first, y.first));
-        List<Integer> dist = new ArrayList<>();
-        int mx = Integer.MAX_VALUE;
-        for(int i=0; i<adj.size(); i++)
+    static int ways(List<Integer> dig, int idx, boolean isIgnored)
+    {
+        // ignore means we try for 2 digit element,
+        if(!isIgnored)
         {
-            dist.add(mx);
-        }
-        dist.set(src, 0);
-        pq.add(new iPair(src,0));
-        while(!pq.isEmpty())
-        {
-            iPair pair = pq.poll();
-            int weight = pair.second;
-            int node = pair.first;
-            for(iPair p:adj.get(node))
+            if(idx==dig.size())
+                return 1;
+            int take = ways(dig, idx+1, false);
+            int ignore = 0;
+            if((dig.get(idx)<3) && (idx!=dig.size()-1))
+            // cant accept double digit ele when first digit is 3 or more.
+            // 0 will never be the case here.
+            // we cant ignore last ele
             {
-                int wt = p.second;
-                int adjNode = p.first;
-                if(weight + wt < dist.get(adjNode))
-                {
-                    dist.set(adjNode, weight + wt);
-                    pq.add(new iPair( adjNode, dist.get(adjNode)));
-                }
+                ignore = ways(dig, idx+1, true);
             }
+            return take+ignore;
         }
-        return new ArrayList<>(dist);
+        else
+        {
+            if(idx==dig.size()-1)
+            {
+                if(((dig.get(idx-1)*10)+dig.get(idx)) < 27)
+                {
+                    return 1;
+                }
+                return 0;
+            }
+
+            // we cant ignore current element.
+            if(((dig.get(idx-1)*10)+dig.get(idx)) < 27)
+            {
+                return ways(dig, idx+1, false);
+            }
+            return 0;
+        }
     }
-    
 }
